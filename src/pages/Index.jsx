@@ -6,6 +6,7 @@ const Index = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authToken, setAuthToken] = useState(null);
   const [wineBottles, setWineBottles] = useState([]);
   const [newWineTitle, setNewWineTitle] = useState("");
   const [newWineDescription, setNewWineDescription] = useState("");
@@ -46,8 +47,10 @@ const Index = () => {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await response.json();
       if (response.ok) {
         setIsLoggedIn(true);
+        setAuthToken(data.token); // Assuming the token is returned in the response body under 'token'
         toast({ title: "Login successful", status: "success" });
         fetchWineBottles();
       } else {
@@ -61,7 +64,11 @@ const Index = () => {
   // Fetch wine bottles
   const fetchWineBottles = async () => {
     try {
-      const response = await fetch(`${apiUrl}/wine_bottles`);
+      const response = await fetch(`${apiUrl}/wine_bottles`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       const data = await response.json();
       setWineBottles(data || []);
     } catch (error) {
@@ -86,6 +93,9 @@ const Index = () => {
       const response = await fetch(`${apiUrl}/wine_bottles`, {
         method: "POST",
         body: formData,
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
       });
 
       if (response.ok) {
@@ -107,6 +117,9 @@ const Index = () => {
     try {
       const response = await fetch(`${apiUrl}/wine_bottles/${encodeURIComponent(title)}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
       });
 
       if (response.ok) {
