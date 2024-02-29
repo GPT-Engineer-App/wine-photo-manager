@@ -50,8 +50,8 @@ const Index = () => {
       if (response.ok) {
         const data = await response.json();
         setIsLoggedIn(true);
-        setAuthToken(data.token);
-        localStorage.setItem("authToken", data.token); // Store the token in localStorage
+        setAuthToken(data.accessToken);
+        localStorage.setItem("authToken", data.accessToken); // Store the token in localStorage
         toast({ title: "Login successful", status: "success" });
         fetchWineBottles();
       } else {
