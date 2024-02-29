@@ -63,7 +63,7 @@ const Index = () => {
     try {
       const response = await fetch(`${apiUrl}/wine_bottles`);
       const data = await response.json();
-      setWineBottles(data);
+      setWineBottles(data || []);
     } catch (error) {
       toast({ title: "Error fetching wine bottles", status: "error" });
     }
@@ -163,20 +163,21 @@ const Index = () => {
             Add Wine Bottle
           </Button>
           <List spacing={3}>
-            {wineBottles.map((wine) => (
-              <ListItem key={wine.title}>
-                <Flex align="center" justify="space-between">
-                  <Box>
-                    <Text fontWeight="bold">{wine.title}</Text>
-                    <Text fontSize="sm">{wine.description}</Text>
-                  </Box>
-                  <Image src={wine.photo} alt={wine.title} maxWidth="100px" maxHeight="100px" />
-                  <Button leftIcon={<FaTrash />} colorScheme="red" onClick={() => handleDeleteWineBottle(wine.title)}>
-                    Delete
-                  </Button>
-                </Flex>
-              </ListItem>
-            ))}
+            {Array.isArray(wineBottles) &&
+              wineBottles.map((wine) => (
+                <ListItem key={wine.title}>
+                  <Flex align="center" justify="space-between">
+                    <Box>
+                      <Text fontWeight="bold">{wine.title}</Text>
+                      <Text fontSize="sm">{wine.description}</Text>
+                    </Box>
+                    <Image src={wine.photo} alt={wine.title} maxWidth="100px" maxHeight="100px" />
+                    <Button leftIcon={<FaTrash />} colorScheme="red" onClick={() => handleDeleteWineBottle(wine.title)}>
+                      Delete
+                    </Button>
+                  </Flex>
+                </ListItem>
+              ))}
           </List>
         </Stack>
       </Box>
