@@ -47,10 +47,11 @@ const Index = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
       if (response.ok) {
+        const data = await response.json();
         setIsLoggedIn(true);
-        setAuthToken(data.token); // Assuming the token is returned in the response body under 'token'
+        setAuthToken(data.token);
+        localStorage.setItem("authToken", data.token); // Store the token in localStorage
         toast({ title: "Login successful", status: "success" });
         fetchWineBottles();
       } else {
@@ -76,11 +77,15 @@ const Index = () => {
     }
   };
 
+  // Check for an existing token in localStorage when the component mounts
   useEffect(() => {
-    if (isLoggedIn) {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsLoggedIn(true);
+      setAuthToken(token);
       fetchWineBottles();
     }
-  }, [isLoggedIn]);
+  }, []);
 
   // Add a new wine bottle
   const handleAddWineBottle = async () => {
@@ -131,6 +136,13 @@ const Index = () => {
     } catch (error) {
       toast({ title: "Error deleting wine bottle", status: "error" });
     }
+  };
+
+  // Logout function to clear the token
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setAuthToken(null);
+    localStorage.removeItem("authToken"); // Remove the token from localStorage
   };
 
   if (!isLoggedIn) {
