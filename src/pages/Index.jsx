@@ -65,16 +65,11 @@ const Index = () => {
   // Fetch wine bottles
   const fetchWineBottles = async () => {
     try {
-      const response = await fetch(
-        `${apiUrl}/wine_bottles`,
-        authToken
-          ? {
-              headers: {
-                Authorization: `Bearer ${authToken}`,
-              },
-            }
-          : {},
-      );
+      const response = await fetch(`${apiUrl}/wine_bottles`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       const data = await response.json();
       setWineBottles(data || []);
     } catch (error) {
